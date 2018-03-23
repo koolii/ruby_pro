@@ -49,18 +49,32 @@ puts do_case(2)
 puts do_case(300)
 
 # true/falseを返却する関数には、慣習として?を付けてわかりやすくする
-def isOne?(arg)
+def is_one?(arg)
   1 == arg
 end
 
 # !が付いている関数は、何かしらの注意が必要な処理が混入している
 # ここだと引数の値を引数自体を変更して、元の値を書き換えてしまうという想定
 # ポインタが渡ってるか不明なのでそういう想定
-def isOne!(arg)
+def is_one!(arg)
   arg = 1
   return arg
 end
-puts isOne?(1)
-puts isOne?(2)
-puts isOne!(1)
-puts isOne!(2)
+puts is_one?(1)
+puts is_one?(2)
+puts is_one!(1)
+puts is_one!(2)
+
+# 疑似変数
+puts 'nil/true/falseも実は疑似変数で他には self/__FILE__/__LINE__/__ENCODING__がある'
+puts "__FILE__: #{__FILE__}"
+puts "__LINE__: #{__LINE__}"
+puts "__ENCODING__: #{__ENCODING__}"
+
+def check_object_id(arg)
+  arg.object_id
+end
+
+variable = 10
+puts "変数variableのobject_id(#{variable.object_id}), check_object_idに渡された引数のobject_id(#{check_object_id(variable)})"
+puts '上を見るとわかるが、関数に渡された変数と渡した変数は同じ参照になっている'
