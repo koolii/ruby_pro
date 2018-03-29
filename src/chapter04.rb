@@ -92,3 +92,63 @@ p [1,2,3,4,5].select(&:odd?)
 # こういう↓ものは簡潔にはかけない
 p [1,2,3,4,5,6].select { |n| n % 3 == 0 }
 p [9, 10, 11, 12].map { |n| n.to_s(16) }
+
+
+# 4.5
+p "[4.5]"
+p (1..5).class
+p (1...5).class
+
+# ..
+range = 1..5 # 1以上5以下
+p range.include?(0)
+p range.include?(1) # WARNING
+p range.include?(5) # WARNING
+# ...
+range = 1...5 # 1以上5未満
+p range.include?(0)
+p range.include?(1) # WARNING
+p range.include?(5) # WARNING
+
+a = [10,20,30,40,50]
+p a[1..3] # 2,3,4番目の要素を取得する(文字列でも同様)
+
+# Rangeクラスのn以上m以下、n以上m未満と言う特徴を使う
+# 0℃以上100℃未満を液体とする
+def a_liquid?(temperature)
+  p 0 <= temperature && temperature < 100
+end
+def b_liquid?(temperature)
+  p (0..100).include?(temperature)
+end
+a_liquid?(-1)
+a_liquid?(0)
+a_liquid?(99)
+a_liquid?(100)
+b_liquid?(-1)
+b_liquid?(0)
+b_liquid?(99)
+b_liquid?(100)
+
+# caseでRangeクラスを使う
+def price(age)
+  case age
+  when 0..5
+    0
+  when 6..12
+    300
+  when 13..18
+    600
+  else
+    1000
+  end
+end
+p price(3)
+p price(12)
+p price(16)
+p price(25)
+
+# stepメソッドでステップアップするカウントを調整する
+numbers = []
+(1..10).step(2) { |n| numbers << n }
+p numbers
