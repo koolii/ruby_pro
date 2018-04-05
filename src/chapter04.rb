@@ -309,3 +309,57 @@ p result
 # WARN:::: ↓は 100 { 'NG' } が優先度的に先に処理されてしまい、エラーが発生してしまう。
 # なので、明示的に delete(100) でdeleteメソッドの引数として100を指定する必要がある
 # p a.delete 100 {'NG'}
+
+# 4.9.1
+sum = 0
+10.times { |i| sum += i }
+p sum
+
+# 4.9.2
+upto = []
+# 10,11,12,13,14,15の配列になるので、10以上15以下の制限
+10.upto(15) { |n| upto << n }
+p upto
+
+downto = []
+# この時は何も処理されず空配列になる
+10.downto(15) { |n| downto << n }
+p downto
+15.downto(10) { |n| downto << n }
+p downto
+
+# 4.9.3
+step = []
+# 最初のスタートが1で、intervalが5なので、1 + 5 = 6, 6 + 5 = 11と言うような配列となる
+# 0スタートがやりやすいかな
+1.step(100, 5) { |n| step << n }
+p step
+step = []
+0.step(100, 5) { |n| step << n }
+p step
+# マイナス値からでも問題なく実行できる
+step = []
+-20.step(100, 5) { |n| step << n }
+p step
+
+# 4.9.4 はwhileだしスルー
+# untilのサンプルもあるが、untilはあんまり好きじゃない
+# 4.9.5
+# ここのnumはスコープ的に最後の値が保持し続けてしまうので注意が必要そう
+for num in [1,2,3,4,5]
+  p num
+end
+[1,2,3,4,5].each do |n|
+  p n
+end
+
+p num
+
+numbers = [1,2,3,4,5]
+p 'loop start'
+# while trueでも出来る
+loop do
+  n = numbers.sample
+  p n
+  break if n == 5
+end
