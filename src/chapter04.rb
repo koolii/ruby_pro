@@ -250,3 +250,62 @@ a = Array.new(5) { 'default' }
 str = a[0]
 str.upcase!
 p a
+
+
+# 4.8.2
+fruits = ['apple', 'orange', 'melon']
+
+# jsのforEach(obj, index)みたいにindexを使いたい
+fruits.each_with_index { |fruit, i| puts "#{i}: #{fruit}" }
+
+# eachの場合は each_with_indexがあるが、mapや他のメソッドにはないので、with_indexと言うメソッドを使う
+fruitStrList = fruits.map.with_index { |fruit, i| "#{i}: #{fruit}" }
+p fruitStrList
+
+fruits.delete_if.with_index { |fruit, i| fruit.include?('a') && i.odd? }
+p fruits
+
+# 4.8.3
+# each_with_indexだと必ず初期値が0スタートになるので、変更したい場合はeach.with_index(n)を使う
+fruits = ['apple', 'orange', 'melon']
+fruits.each.with_index(100) { |fruit, i| puts "#{i}: #{fruit}"}
+p fruits.map.with_index(200) { |fruit, i| "#{i}: #{fruit}"}
+
+# 4.8.4
+# ループで繰り返す要素が配列で、しかもその配列を一つ一つ変数に格納するのではなく一括で定義したい
+dimensions = [
+  [10, 20],
+  [30, 40],
+  [50, 60],
+]
+
+areas = []
+dimensions.each do |length, height|
+  areas << length * height
+end
+p areas
+
+areas = dimensions.map.with_index(200) do |(length, height), i|
+  area = length * height
+  p "#{i}: area: #{area}"
+  area
+end
+p areas
+
+# 4.8.7
+# do...endと{}はほぼ同じ意味を持つが、{}が優先順位が高く、意図した動作をしないものもある
+a = [1,2,3]
+
+# deleteにブロックを続けるとdeleteするものがなかった場合のデフォルト値を設定可能
+result = a.delete(100) do 'NG' end
+p result
+p a.delete(100) do 'NG' end # ここはなぜかnilになる(why does return is nil?)
+p a.delete(100) {'NG'}
+p a.delete(1) {'NG'}
+
+# ここでdeleteを実行する()をなくすと、
+result = a.delete 100 do 'NG' end
+p result
+# WARN:::: ↓は 100 { 'NG' } が優先度的に先に処理されてしまい、エラーが発生してしまう。
+# なので、明示的に delete(100) でdeleteメソッドの引数として100を指定する必要がある
+# p a.delete 100 {'NG'}
