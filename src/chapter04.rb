@@ -363,3 +363,37 @@ loop do
   p n
   break if n == 5
 end
+
+# 4.10.2
+# throw/catchはRubyでは、例外処理ではなく１つのシンタックスとして使用して、深い場所から一番上まで抜け出す等の処理が出来る
+# breakは１つのループのみ抜け出すことができる
+fruits = ['apple', 'melon', 'orange']
+numbers = [1, 2, 3]
+# catch の第一引数はタグとして動作して、通常はシンボルを使うらしい
+result = catch :done do
+  fruits.shuffle.each do |fruit|
+    numbers.shuffle.each do |n|
+      puts "#{fruit}, #{n}"
+      if fruit == 'orange' && n == 3
+        # すべての繰り返し処理を脱出して、catchまで遡る
+        # 第二引数を設定するとcatchメソッドの戻り値として返却される
+        throw :done, 10000
+      end
+    end
+  end
+end
+
+p result
+
+# 4.10.4 Rubyはループのcontinueの代わりにnextを使う
+# 4.10.5 redoはその回のループを最初からやりなおす事が出来るようになる
+# redoには巻き戻りということで無限ループが起こりうる可能性があることに注意すること
+foods = ['pepper', 'tomato', 'cucumber']
+foods.each do |food|
+  print "Do you like #{food}? => "
+  answer = ['yes', 'no'].sample
+  puts answer
+
+  # noなら続ける
+  redo unless answer == 'yes'
+end
