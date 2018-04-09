@@ -20,3 +20,12 @@ p person[:age]
 p person[:gender]
 p person[:friends]
 p person[:phone]
+
+def buy_burger(menu, drink:, potato:)
+  p('buy_burger')
+  p(menu)
+  p(:drink)
+  p(:potato)
+end
+buy_burger('menu', drink: true, potato: true)
+buy_burger('menu', potato: false, drink: false)
