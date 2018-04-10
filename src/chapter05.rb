@@ -67,3 +67,29 @@ h = Hash.new { |hash, key| hash[key] = 'hello' }
 p h[:foo]
 p h[:bar]
 p h # foo,barに初期値のhelloが格納されている
+
+# 5.7
+# 普通は数値だけだとシンボル化できないが文字列で囲めば可能
+p :'12345'
+p :'ruby:is funny'
+
+# 文字列から通常のシンボルを生成する
+# ダブルクォートを使えば可能
+name = 'Alice'
+p :"#{name.upcase}"
+
+# ハッシュでキーを文字列として使う
+hash = { 'abc': 123 }
+p hash
+
+# %i()でシンボルの配列を作れる
+hash = %i(apple orange melon watermelon)
+p hash
+
+string = 'apple'
+symbol = :apple
+
+# to_symで文字列をシンボルに変換する
+p string == symbol
+p string.to_sym == symbol
+p string == symbol.to_s
