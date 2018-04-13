@@ -1,6 +1,8 @@
 class User
   attr_reader :first_name, :last_name, :age
 
+  puts "User class: #{self}"
+
   DEFAULT_AGE = 0
   DEFAULT_LAST_NAME = '(unknown)'
 
@@ -19,6 +21,10 @@ class User
     "#{first_name} #{last_name}"
   end
 
+  def self.ageOut(age)
+    "Age: #{@age}"
+  end
+
   # self.を付けるとクラスメソッドになる
   def self.create_users(names)
     names.map do |name|
@@ -27,7 +33,9 @@ class User
   end
 
   def hello
-    puts "HELLO!! This is my information => Name: #{full_name}, Age: #{@age}"
+    # User.ageOutはクラスメソッドになっている
+    # self.class.ageOUt()という呼出し方も可能
+    puts "HELLO!! This is my information => Name: #{full_name}, #{User.ageOut(@age)}"
   end
 end
 
