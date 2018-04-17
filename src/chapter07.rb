@@ -57,7 +57,7 @@ end
 
 
 class Product
-  attr_reader :name, :price
+  attr_reader :name, :price, :code
 
   STATIC = 100
   STATIC = 1000.freeze
@@ -65,9 +65,19 @@ class Product
   # または
   SOME_NAMES2 = ['Foo', 'Bar'].map(&:freeze).freeze
 
-  def initialize(name, price)
+  def initialize(code, name, price)
+    @code = code
     @name = name
     @price = price
+  end
+
+  def ==(other)
+    # Productクラスのオブジェクトだったら
+    if other.is_a?(Product)
+      code == other.code
+    else
+      false
+    end
   end
 
   # private
@@ -81,6 +91,9 @@ class Product
   def prefix
     "[Product]"
   end
+
+  # prefixメソッドのエイリアスのpメソッドを定義
+  alias p prefix
 end
 
 # Product.freeze
@@ -88,7 +101,7 @@ end
 # なので、定数単位でfreezeさせる
 # Product.STATIC = 10000
 
-product = Product.new('A great movie', 1000)
+product = Product.new('000', 'A great movie', 1000)
 p product.name
 p product.price
 p product.to_s
@@ -98,20 +111,30 @@ class DVD < Product
   attr_reader :running_time
 
   # 継承クラスで特にinitizlizeを定義しなければsuper()が自動的に実行される
-  def initialize(name, price, running_time)
-    super(name, price)
+  def initialize(code, name, price, running_time)
+    super(code, name, price)
     @running_time = running_time
   end
 
   # superを呼び出すと親クラスの同一メソッドが呼び出される
   # でもprivateになってるProduct.to_sはここから呼び出すとエラーになった
   def to_s
-    "#{prefix} #{super}, => extra: running_time: #{running_time}"
+    "#{p} #{super}, => extra: running_time: #{running_time}"
   end
 end
 
-dvd = DVD.new('A great movie', 1000, 120)
+dvd = DVD.new('DVD000', 'A great movie', 1000, 120)
 p dvd.name
 p dvd.price
 p dvd.running_time
 p dvd.to_s
+
+p1 = Product.new('A001', 'A nice movie', 100)
+p2 = Product.new('N002', 'A bad movie', 10000)
+p3 = Product.new('A001', 'A wonderful movie', 1000)
+
+# 普通なら == だとそれぞれの object_idがそれぞれ比較されて判定が行われるが
+# この部分も任意の実装に変更することが出来る
+# Product.==()を確認すると分かる
+p p1 == p2
+p p1 == p3
