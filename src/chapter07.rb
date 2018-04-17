@@ -59,15 +59,34 @@ end
 class Product
   attr_reader :name, :price
 
+  STATIC = 100
+  STATIC = 1000.freeze
+  SOME_NAMES = ['Foo'.freeze, 'Bar'.freeze].freeze
+  # または
+  SOME_NAMES2 = ['Foo', 'Bar'].map(&:freeze).freeze
+
   def initialize(name, price)
     @name = name
     @price = price
   end
 
+  # private
+
   def to_s
     "name: #{name}, price: #{price}"
   end
+
+  private
+
+  def prefix
+    "[Product]"
+  end
 end
+
+# Product.freeze
+# freezeをすれば定数への再代入を防ぐことが出きるがクラスごとやるケースは少ない
+# なので、定数単位でfreezeさせる
+# Product.STATIC = 10000
 
 product = Product.new('A great movie', 1000)
 p product.name
@@ -85,8 +104,9 @@ class DVD < Product
   end
 
   # superを呼び出すと親クラスの同一メソッドが呼び出される
+  # でもprivateになってるProduct.to_sはここから呼び出すとエラーになった
   def to_s
-    "#{super}, => extra: running_time: #{running_time}"
+    "#{prefix} #{super}, => extra: running_time: #{running_time}"
   end
 end
 
