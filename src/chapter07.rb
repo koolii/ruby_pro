@@ -121,6 +121,10 @@ class DVD < Product
   def to_s
     "#{p} #{super}, => extra: running_time: #{running_time}"
   end
+
+  def get_price_with_tax
+    @price * 1.05
+  end
 end
 
 dvd = DVD.new('DVD000', 'A great movie', 1000, 120)
@@ -136,5 +140,43 @@ p3 = Product.new('A001', 'A wonderful movie', 1000)
 # 普通なら == だとそれぞれの object_idがそれぞれ比較されて判定が行われるが
 # この部分も任意の実装に変更することが出来る
 # Product.==()を確認すると分かる
+# Ruby での他の同値比較
+# equal?/==/eq?/===
+# これらの中でequal?は再定義してはならない。プログラムが壊れる可能性がある
+# ===はcase(when)節で使用する
+#
 p p1 == p2
 p p1 == p3
+
+
+# Rubyはすでに作成されているクラス(String/Integer等でも)にメソッドを変更したり、新規メソッドを追加することが出来る
+# 既存の実装を上書きして、自分が期待する挙動に変更することをモンキーパッチと呼ぶ(けど、わかりづらくなるからあんまり使わなそう)
+class String
+  def shuffle_koolii
+    chars.shuffle.join
+  end
+end
+
+s = 'Hello, I am Alice.'
+# 正常に呼び出すことが出来てしまう
+p s.shuffle_koolii
+
+
+p dvd.get_price_with_tax
+
+# DVDクラスは元々Productクラスを継承して作成している
+# ここで再度DVDクラスを再定義し、モンキーパッチをget_price_with_taxに行っているが、DVDクラスはProductクラスを継承している事実は変わらない
+# 今回はクラスのモンキーパッチだが、生成したオブジェクト個別にもモンキーパッチを与えることが出来る(No. 6620を参照)
+class DVD
+  def get_price_with_tax
+    @price * 1.20
+  end
+end
+
+dvd2 = DVD.new('DVD000', 'A great movie', 1000, 120)
+p dvd2.name
+
+p dvd2.get_price_with_tax
+# しかもdvdオブジェクトをDVDクラスから生成した後に、DVDクラスを変更すると
+# 元々のdvdオブジェクトにもモンキーパッチが適用されている(JSで言うところのprototypeオブジェクトを変更するみたいなことになっているのかな？)
+p dvd.get_price_with_tax
