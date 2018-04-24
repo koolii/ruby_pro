@@ -3,9 +3,9 @@ require './ruby-book/lib/deep_freezable'
 class Bank
   extend DeepFreezable
 
-  CURRENCIES = deep_freeze([
+  CURRENCIES = deep_freeze({
     'Japan' => 'yen',
-    'US' => 'doller',
+    'US' => 'dollar',
     'India' => 'rupee',
-  ])
+  })
 end
