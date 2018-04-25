@@ -97,3 +97,50 @@ p userName.name2
 userName.change_name
 p userName.name
 p userName.name2
+
+
+# 8.6 モジュールで名前空間を作成して、競合を避ける
+module Baseball
+  class Second
+    def initialize(player, uniform_num)
+      @player = player
+      @uniform_num = uniform_num
+    end
+  end
+end
+
+module Clock
+  class Second
+    def initialize(digits)
+      @digits = digits
+    end
+  end
+end
+
+class Baseball::Third
+  def initialize(player, uniform_num)
+    @player = player
+    @uniform_num = uniform_num
+  end
+end
+
+baseball = Baseball::Second.new('Alice', 13)
+baseball2 = Baseball::Third.new('Tom', 21)
+clock = Clock::Second.new(13)
+
+p baseball
+p clock
+p baseball2
+
+# todo
+# 一応最初からmoduleがない状態からFiber::Oneを定義しても正常に動作する
+# これは単純にモジュールFiberを作成して、そこからクラスを生やしているのか
+# はたまた、ただ、Fiber::Oneと言うクラスを作成しているだけなのかがわかっていない
+class Fiber::One
+end
+fiber = Fiber::One.new()
+p fiber
+
+# またトップレベルのクラスを呼び出す時はクラス名の前に :: を追加することで明示的に指定することが可能
+nameX = ::UserName.new('anthem')
+p nameX.name
