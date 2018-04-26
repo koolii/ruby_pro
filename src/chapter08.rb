@@ -181,3 +181,30 @@ class Calculator
 end
 calculator = Calculator.new()
 p calculator.calc_sqrt(2)
+
+# 8.8 状態を保持するモジュール
+# モジュールはインスタンス化ができないので、実質１つしか存在しないので、ある意味シングルトンということも出来るかも
+# クラスでシングルトンを実装したいならSingletonモジュールがあるのでそれを使うと良い
+module AwesomeApi
+  @base_url = ''
+  @debug_mode = false
+
+  # これどういう意味だっけ？クラスメソッドを定義している気がする
+  class << self
+    def base_url=(value)
+      @base_url = value
+    end
+
+    def base_url
+      @base_url
+    end
+
+    def debug_mode=(value)
+      @debug_mode = value
+    end
+
+    def debug_mode(value)
+      @debug_mode
+    end
+  end
+end
