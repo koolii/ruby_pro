@@ -144,3 +144,40 @@ p fiber
 # またトップレベルのクラスを呼び出す時はクラス名の前に :: を追加することで明示的に指定することが可能
 nameX = ::UserName.new('anthem')
 p nameX.name
+
+# 8.7
+module Logger
+  # 定数
+  PREFIX = '[LOG]'.freeze
+
+  def log(text)
+    p "#{PREFIX} #{text}"
+  end
+
+  # 別クラスからmixinしなくてもメソッドを利用出来るように
+  # Logger.log()で呼び出せる
+  module_function :log
+end
+
+class ProductLogger
+  # module_functionで定義したlogは ProductLoggerクラス内部ではprivate修飾子になる
+  include Logger
+
+  def title
+    log 'title is called.'
+    'A greate movie'
+  end
+end
+
+productLogger = ProductLogger.new()
+productLogger.title
+
+# Mathモジュールはビルトインが豊富なモジュール
+class Calculator
+  include Math
+  def calc_sqrt(n)
+    sqrt(n)
+  end
+end
+calculator = Calculator.new()
+p calculator.calc_sqrt(2)
