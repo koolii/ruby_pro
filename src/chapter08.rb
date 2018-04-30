@@ -208,3 +208,67 @@ module AwesomeApi
     end
   end
 end
+
+# 8.9
+# 継承やモジュールのinclude等で複数の同名メソッドが存在する場合は全てが呼ばれるっぽい
+# 呼ばれる順番に関してはClass.ancestorsを実行すれば配列オブジェクトが返ってくるのでその順番通りに動作するっぽい
+
+# モジュールのincludeと似たような機能として prependを使ってモジュールをmixinさせることが出来て、
+# 特徴としては同名のメソッドが有った時に、ミックスインしたクラスよりも先にモジュール側のメソッドが呼ばれる
+
+module A
+  def to_s
+    "<A> #{super}"
+  end
+end
+
+class Product9
+  # insteads of "include"
+  prepend A
+
+  def to_s
+    "<Product> #{super}"
+  end
+
+  def name
+    "A great file"
+  end
+end
+
+# ここの出力が本と違う
+# includeを使用した場合は <Product> <A> ...となる
+# <A> <Product> #<Product9:0x00007fe71f9304f0> と言う出力に成った。
+product9 = Product9.new
+p product9.to_s
+p product9.name
+# [A, Product9, Object, Kernel, BasicObject]
+# 上記を見れば分かるが、モジュールが先に読み込まれてしまっている
+p Product9.ancestors
+
+module NameDecorator
+  def name
+    "<<#{super}>>"
+  end
+end
+
+class Product9
+  prepend NameDecorator
+end
+
+product91 = Product9.new
+# 最初に定義したnameメソッドがNameDecoratorのnameメソッドに上書きされていることが分かる
+p product91.name
+
+class PrependUser
+  def name
+    'Alice'
+  end
+end
+class PrependUser
+  prepend NameDecorator
+end
+
+prependUser = PrependUser.new
+p prependUser.name
+
+# refinementsはスルー
