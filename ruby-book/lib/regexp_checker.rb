@@ -1,13 +1,18 @@
 def reg(text, pattern)
-  regexp = Regexp.new(pattern)
-  matches = text.scan(regexp)
-  puts "---BEGIN---"
-  if matches.size > 0
-    puts "Matched: #{matches.join(',')}"
-  else
-    puts "Nothing matched."
+  begin
+    regexp = Regexp.new(pattern)
+    matches = text.scan(regexp)
+    puts "---BEGIN---"
+    if matches.size > 0
+      puts "Matched: #{matches.join(',')}"
+    else
+      puts "Nothing matched."
+    end
+  rescue RegexpError => e
+    puts "Invalid expression: #{e.message}"
+  ensure
+    puts "---END---\n\n"
   end
-  puts "---END---\n\n"
 end
 
 print "Text??:"
@@ -23,7 +28,7 @@ puts pattern
 reg(text, pattern)
 
 text = 'abc-def-ghi'
-pattern = '[1-6]+'
+pattern = '[1-6+'
 puts text
 puts pattern
 reg(text, pattern)
